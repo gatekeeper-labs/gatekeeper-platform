@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { bot } from './config/telegram';
 import { setupBot } from './bot';
 import { paymentRoutes } from './routes/payment.routes';
+import db from './database.ts';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ async function bootstrap() {
   setupBot();
   await bot.init();
   bot.start();
+  db.connect();
   console.log(`🤖 Bot @${bot.botInfo.username} rodando!`);
 
   // Inicializa o Express

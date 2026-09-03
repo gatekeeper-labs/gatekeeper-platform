@@ -122,3 +122,23 @@ CREATE TABLE IF NOT EXISTS historico_acessos (
 );
 
 CREATE INDEX idx_historico_produtor_tipo ON historico_acessos(produtor_id, tipo);
+
+-- Logs do Bot
+CREATE TYPE tipo_operacao_bot AS ENUM (
+    'CONVITE_GERADO',
+    'MEMBRO_ENTROU',
+    'MEMBRO_EXPULSO',
+    'MEMBRO_AVISADO',
+    'MENSAGEM_FIXADA'
+);
+
+CREATE TABLE IF NOT EXISTS log_operacoes_bot (
+    id BIGSERIAL PRIMARY KEY,
+    produtor_id UUID REFERENCES produtores(id) ON DELETE CASCADE,
+    assinante_id UUID REFERENCES assinantes(id) ON DELETE SET NULL,
+    tipo tipo_operacao_bot NOT NULL,
+    detalhes VARCHAR(255),
+    executado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_operacoes_semana ON log_operacoes_bot(produtor_id, executado_em);
